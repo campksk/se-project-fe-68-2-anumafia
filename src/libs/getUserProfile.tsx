@@ -1,5 +1,6 @@
 export default async function getUserProfile(token: string) {
-  const response = await fetch("https://be-ihaveksk.vercel.app/api/v1/auth/me", {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const response = await fetch(`${backendUrl}/api/v1/auth/me`, {
     method: "GET",
     headers: {
       authorization: `Bearer ${token}`,
