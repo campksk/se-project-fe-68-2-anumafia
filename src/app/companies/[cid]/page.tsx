@@ -8,18 +8,42 @@ import ReviewForm from "@/components/ReviewForm";
 
 import Link from "next/link";
 
+<<<<<<< HEAD
 
+||||||| parent of 25e2e54 (reviewList)
+=======
+import getReviews from "@/libs/getReviews";
+import ReviewList from "@/components/ReviewList";
+
+
+>>>>>>> 25e2e54 (reviewList)
 export default async function CompanyDetailPage({ params }: { params: Promise<{ cid: string }> }) {
 
   const { cid } = await params;
+<<<<<<< HEAD
 
  
 
+||||||| parent of 25e2e54 (reviewList)
+  
+=======
+  
+ 
+
+>>>>>>> 25e2e54 (reviewList)
   const companyDetail = await getCompany(cid);
 
   const company = companyDetail.data;
 
+<<<<<<< HEAD
 
+||||||| parent of 25e2e54 (reviewList)
+=======
+  const reviewsData = await getReviews(cid);
+  const reviews = reviewsData?.data || [];
+
+
+>>>>>>> 25e2e54 (reviewList)
   if (!company) {
 
     return (
@@ -125,6 +149,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
 
         </div>
 
+<<<<<<< HEAD
 
         <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
 
@@ -139,6 +164,26 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
 
            </div>
 
+||||||| parent of 25e2e54 (reviewList)
+        {}
+        <div className="w-full md:w-[400px] flex justify-center md:justify-end shrink-0">
+          <InterviewForm companyId={company._id || company.id} companyName={company.name} />
+=======
+
+        <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
+
+           <ReviewForm companyId={company._id || company.id} />
+
+
+           <div className="mt-8 pt-8 border-t border-gray-100">
+
+                <div className="mt-8 pt-8 border-t border-gray-100">
+                  <ReviewList reviews={reviews} companyId={cid || company.id} />
+                </div>
+
+           </div>
+
+>>>>>>> 25e2e54 (reviewList)
         </div>
 
        
