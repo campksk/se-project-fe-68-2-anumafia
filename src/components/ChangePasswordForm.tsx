@@ -16,7 +16,7 @@ export default function ChangePasswordForm() {
     if (!session?.user?.token) return;
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://be-ihaveksk.vercel.app";
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const res = await fetch(`${backendUrl}/api/v1/auth/updatepassword`, {
         method: "PUT",
         headers: {
