@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 
 interface Props {
@@ -14,7 +14,7 @@ export default function ActionModal({ isOpen, onConfirm, onCancel, title }: Prop
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 bg-black/50" onClick={onCancel} />
 
       <div className="bg-white p-6 rounded-xl z-10 w-96">
