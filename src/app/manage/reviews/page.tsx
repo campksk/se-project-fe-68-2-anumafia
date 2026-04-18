@@ -24,7 +24,7 @@ export default async function MyBookingPage() {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
-            Admin <span className="text-red-600">Manage Review</span>
+            Admin <span className="text-red-600">Manage Reviews</span>
           </h1>
           <p className="text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
             "Manage all review across the system. You have full control." 

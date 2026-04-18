@@ -26,7 +26,7 @@ export default async function MyBookingPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
             {isAdmin ? (
-              <>Admin <span className="text-red-600">Dashboard</span></>
+              <>Admin <span className="text-red-600">Manages Interviews</span></>
             ) : (
               <>My <span className="text-cyan-600">Bookings</span></>
             )}
