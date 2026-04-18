@@ -44,7 +44,7 @@ export default async function MyBookingPage() {
           token={session.user.token} 
           role={session.user.role} 
         />
-        
+
       </div>
     </main>
   );
