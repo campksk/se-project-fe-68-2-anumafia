@@ -6,38 +6,38 @@ import banUser from "@/libs/banUser";
 import unbanUser from "@/libs/unbanUser";
 import ActionModal from "./ActionModal";
 import { UserItem } from "@/interface";
-import { useRouter } from "next/navigation";
 
 export default function UserControls({
   user,
   token,
+  onRefresh,
 }: {
   user: UserItem;
   token: string;
+  onRefresh: () => Promise<void>;
 }) {
   const userId = user._id;
 
   const [open, setOpen] = useState<null | "yellow" | "ban">(null);
-	const router = useRouter();
 
   const handleYellow = async (reason: string) => {
     await yellowCardUser(userId, token, reason);
     alert("Yellow card given");
     setOpen(null);
-		router.refresh();
+    await onRefresh();
   };
 
   const handleBan = async (reason: string) => {
     await banUser(userId, token, reason);
     alert("User banned");
     setOpen(null);
-		router.refresh();
+    await onRefresh();
   };
 
   const handleUnban = async () => {
     await unbanUser(userId, token);
     alert("User unbanned");
-		router.refresh();
+    await onRefresh();
   };
 
   return (
