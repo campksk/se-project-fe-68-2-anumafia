@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import updateProfile from "@/libs/updateProfile";
 import DeactivateAccountModal from "./DeactivateAccountModal";
+import SvgIcon from "@mui/material/SvgIcon";
 
 type ProfileData = {
   name?: string;
@@ -208,8 +209,11 @@ export default function ProfileCard({ profileData, isLoading, fallbackEmail, onP
             )}
             <button
               onClick={() => setShowDeactivateModal(true)}
-              className="w-full py-3 mt-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-all shadow-md active:scale-[0.98]"
+              className="w-full py-3 mt-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold flex justify-center items-center transition-all shadow-md active:scale-[0.98]"
             >
+							<SvgIcon viewBox="0 0 24 24" className="!mr-2" fontSize="medium">
+								<path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"></path>
+							</SvgIcon>
               Deactivate Account
             </button>
           </div>

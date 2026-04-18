@@ -1,9 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import getUserProfile from "@/libs/getUserProfile";
-import DeactivateAccountModal from "@/components/DeactivateAccountModal";
 import ChangePasswordForm from "@/components/ChangePasswordForm";
 import ProfileCard from "@/components/ProfileCard";
 
@@ -12,14 +11,6 @@ export default function ProfileSettingsPage() {
 
   const [profileData, setProfileData] = useState<any>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-
-  // Deactivate states
-  const [showDeactivateModal, setShowDeactivateModal] = useState(false);
-  const [isDeactivating, setIsDeactivating] = useState(false);
 
   const fetchProfile = useCallback(async () => {
     if (session?.user?.token) {
