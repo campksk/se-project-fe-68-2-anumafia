@@ -26,16 +26,10 @@ export default function TopMenu() {
         <div className="hidden md:flex flex-row items-center space-x-6 md:space-x-8">
           {isAdmin?(<TopMenuItem title="Manage Review" pageRef="/manage/reviews"  />):(<></>)}
           <TopMenuItem title={bookingText} pageRef="/mybooking"  />
+          {isAdmin?(<TopMenuItem title="Manage Users" pageRef="/admin/manage-user"  />):(<></>)}
           <TopMenuItem title="Companies" pageRef="/companies"  />
           {session ? (
             <>
-              {/* แสดงเฉพาะ Admin */}
-              {session.user?.role === "admin" && (
-                <Link href="/admin/manage-user" className="font-semibold text-purple-700 hover:text-purple-600 transition-colors flex items-center gap-2">
-                  Manage Users
-                </Link>
-              )}
-              
               <Link href="/profile" className="font-semibold text-gray-700 hover:text-cyan-600 transition-colors flex items-center gap-2">
                 👤 {session.user?.name || "Profile"}
               </Link>
