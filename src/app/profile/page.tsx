@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import getUserProfile from "@/libs/getUserProfile";
 import DeactivateAccountModal from "@/components/DeactivateAccountModal";
-import { RiDeleteBin5Fill } from "react-icons/ri";
+import deactivateUser from "@/libs/deactivateUser";
+import SvgIcon from '@mui/material/SvgIcon';
 
 export default function ProfileSettingsPage() {
   const { data: session } = useSession();
@@ -66,12 +67,7 @@ export default function ProfileSettingsPage() {
     if (!session?.user?.token) return;
     setIsDeactivating(true);
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      const res = await fetch(`${backendUrl}/api/v1/users/`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${session.user.token}` }
-      });
-      if (!res.ok) throw new Error("Failed to deactivate account");
+      await deactivateUser(session.user.token);
       await signOut({ callbackUrl: "/" });
     } catch (err: any) {
       alert(err.message);
@@ -134,9 +130,11 @@ export default function ProfileSettingsPage() {
           <div className="mt-8 pt-6 border-t border-gray-100">
             <button
               onClick={() => setShowDeactivateModal(true)}
-              className="w-full py-3  rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-all shadow-md active:scale-[0.98]"
+              className="w-full py-3 flex justify-center items-center rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-all shadow-md active:scale-[0.98]"
             >
-              <RiDeleteBin5Fill className='inline-block !mr-2 ' />
+							<SvgIcon viewBox="0 0 24 24" className="!mr-2" fontSize="medium">
+								<path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"></path>
+							</SvgIcon>
               Deactivate Account
             </button>
           </div>
