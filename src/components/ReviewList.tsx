@@ -3,23 +3,16 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
-
-interface Review {
-  _id: string;
-  user: { _id: string; name: string };
-  rating: number;
-  reviewText: string;
-  createdAt: string;
-}
+import { ReviewItem } from "@/interface";
 
 interface ReviewListProps {
-  reviews: Review[];
+  reviews: ReviewItem[];
   companyId: string;
 }
 
 export default function ReviewList({ reviews: initialReviews, companyId }: ReviewListProps) {
   const { data: session } = useSession();
-  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const [reviews, setReviews] = useState<ReviewItem[]>(initialReviews);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");

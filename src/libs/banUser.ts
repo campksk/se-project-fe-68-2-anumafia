@@ -5,7 +5,7 @@ export default async function banUser(
 ) {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-  const res = await fetch(`${backendUrl}/api/v1/auth/ban/${userId}`, {
+  const res = await fetch(`${backendUrl}/api/v1/users/ban/${userId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -16,6 +16,10 @@ export default async function banUser(
       reason
     })
   });
+
+  if (!res.ok) {
+	throw new Error(`Failed to ban user: ${await res.text()}`);
+  }
 
   return await res.json();
 }

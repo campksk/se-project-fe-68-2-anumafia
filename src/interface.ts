@@ -5,7 +5,18 @@ export interface UserItem {
   tel: string;
   role: string;
   createdAt: string;
-  token?: string; 
+  token?: string;
+  yellowCards: {
+	count: number;
+	records: {
+		reason: string;
+		issuedAt: string;
+	}
+  };
+  ban: {
+		isBanned: boolean;
+		reason: string;
+	};
 }
 
 export interface CompanyItem {
@@ -53,7 +64,7 @@ export interface ReviewItem {
   _id: string;
   user: UserItemForReview;
   company: CompanyItemForReview; 
-  rating: Number;
+  rating: number;
   reviewText: string;
   createdAt: string;
 }
@@ -63,5 +74,3 @@ export interface ReviewJson {
   count: number;
   data: ReviewItem[];
 }
-
-

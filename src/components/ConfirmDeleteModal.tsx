@@ -1,44 +1,37 @@
 "use client"
-import { useState } from "react";
 
-interface Props {
+interface ConfirmDeleteModalProps {
   isOpen: boolean;
-  onConfirm: (reason: string) => void;
+  onConfirm: () => void;
   onCancel: () => void;
-  title: string;
 }
 
-export default function ActionModal({ isOpen, onConfirm, onCancel, title }: Props) {
-  const [reason, setReason] = useState("");
-
+export default function ConfirmDeleteModal({ isOpen, onConfirm, onCancel }: ConfirmDeleteModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/50" onClick={onCancel} />
 
-      <div className="bg-white p-6 rounded-xl z-10 w-96">
-        <h2 className="text-xl font-bold mb-4">{title}</h2>
+      {/* Modal */}
+      <div className="relative bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 text-center z-10">
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+          Do you want to Delete This Review
+        </h2>
 
-        <textarea
-          placeholder="Enter reason..."
-          className="w-full border p-2 mb-4"
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-        />
-
-        <div className="flex gap-2">
+        <div className="flex gap-4">
           <button
-            onClick={() => onConfirm(reason)}
-            className="bg-red-500 text-white px-4 py-2 rounded"
+            onClick={onConfirm}
+            className="flex-1 bg-red-400 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors text-lg"
           >
-            OK
+            yes
           </button>
           <button
             onClick={onCancel}
-            className="bg-gray-200 px-4 py-2 rounded"
+            className="flex-1 bg-red-100 hover:bg-red-200 text-red-300 font-bold py-3 rounded-xl transition-colors text-lg"
           >
-            Cancel
+            no
           </button>
         </div>
       </div>

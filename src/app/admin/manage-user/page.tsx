@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { UserItem } from '@/interface'; 
 import getUsers from '@/libs/getUsers'; 
+import UserControls from '@/components/UserControls';
 
 export default function ManageUserPage() {
   const { data: session } = useSession();
@@ -119,6 +120,9 @@ export default function ManageUserPage() {
                           <p className="font-medium text-gray-900 capitalize">{user.role}</p>
                         </div>
                       </div>
+					  <div className="mt-6 flex justify-end gap-3">
+						<UserControls user={user} token={session?.user?.token || ''}/>
+					  </div>
                     </div>
                   )}
                 </div>
