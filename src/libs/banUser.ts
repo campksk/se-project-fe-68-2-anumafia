@@ -18,7 +18,7 @@ export default async function banUser(
   });
 
   if (!res.ok) {
-	throw new Error(`Failed to ban user: ${await res.text()}`);
+	throw new Error(`Failed to ban user: ${res.statusText}`);
   }
 
   return await res.json();
