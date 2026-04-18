@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import updateProfile from "@/libs/updateProfile";
 import DeactivateAccountModal from "./DeactivateAccountModal";
 import SvgIcon from "@mui/material/SvgIcon";
+import deactivateUser from "@/libs/deactivateUser";
 
 type ProfileData = {
   name?: string;
@@ -75,12 +76,7 @@ export default function ProfileCard({ profileData, isLoading, fallbackEmail, onP
     if (!session?.user?.token) return;
     setIsDeactivating(true);
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-      const res = await fetch(`${backendUrl}/api/v1/users/`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${session.user.token}` }
-      });
-      if (!res.ok) throw new Error("Failed to deactivate account");
+      await deactivateUser(session.user.token);
       await signOut({ callbackUrl: "/" });
     } catch (err: any) {
       alert(err.message);
