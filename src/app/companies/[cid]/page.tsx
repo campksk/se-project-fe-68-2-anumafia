@@ -5,6 +5,7 @@ import ReviewForm from "@/components/ReviewForm";
 import Link from "next/link";
 import getReviews from "@/libs/getReviews";
 import ReviewList from "@/components/ReviewList";
+import { ReviewJson } from "@/interface";
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ cid: string }> }) {
   const { cid } = await params;
@@ -14,8 +15,8 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   const company = companyDetail.data;
 
   // ดึงข้อมูลรีวิวทั้งหมดของบริษัทนี้
-  const reviewsData = await getReviews(cid);
-  const reviews = reviewsData?.data || [];
+  const reviewsData = await getReviews(cid) as ReviewJson;
+  const reviews = reviewsData.data || [];
 
   if (!company) {
     return (

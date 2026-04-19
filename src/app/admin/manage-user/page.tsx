@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { UserItem } from '@/interface'; 
 import getUsers from '@/libs/getUsers'; 
+import UserControls from '@/components/UserControls';
 
 export default function ManageUserPage() {
   const { data: session } = useSession();
@@ -13,27 +14,28 @@ export default function ManageUserPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (session?.user?.token) {
-        try {
-          const res = await getUsers(session.user.token);
-          
-          if (res.data) {
-             setUsers(res.data); 
-          }
-        } catch (error) {
-          console.error("Error fetching users:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      } else if (session === null) {
-         setIsLoading(false);
+  const fetchUsers = useCallback(async () => {
+    if (!session?.user?.token) return;
+    try {
+      setIsLoading(true);
+      const res = await getUsers(session.user.token);
+      if (res.data) {
+        setUsers(res.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [session?.user?.token]);
 
+  useEffect(() => {
+    if (session === null) {
+      setIsLoading(false);
+      return;
+    }
     fetchUsers();
-  }, [session]);
+  }, [session, fetchUsers]);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -118,6 +120,9 @@ export default function ManageUserPage() {
                           <p className="text-gray-500 mb-1">Role</p>
                           <p className="font-medium text-gray-900 capitalize">{user.role}</p>
                         </div>
+                      </div>
+                      <div className="mt-6 flex justify-end gap-3">
+                        <UserControls user={user} token={session?.user?.token || ''} onRefresh={fetchUsers} />
                       </div>
                     </div>
                   )}

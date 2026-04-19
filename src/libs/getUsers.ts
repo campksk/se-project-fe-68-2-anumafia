@@ -1,15 +1,15 @@
 export default async function getUsers(token: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
-  });
+	const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+	const res = await fetch(`${backendUrl}/api/v1/users`, {
+		method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+	});
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch users");
-  }
+	if(!res.ok) {
+		throw new Error(`Failed to fetch users: ${res.statusText}`);
+	}
 
-  return await response.json();
+	return await res.json();
 }
