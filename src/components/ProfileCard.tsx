@@ -1,8 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import updateProfile from "@/libs/updateProfile";
+import DeactivateAccountModal from "./DeactivateAccountModal";
+import SvgIcon from "@mui/material/SvgIcon";
+import deactivateUser from "@/libs/deactivateUser";
 
 type ProfileData = {
   name?: string;
@@ -28,6 +31,10 @@ export default function ProfileCard({ profileData, isLoading, fallbackEmail, onP
   
   const [isSaving, setIsSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+  const [isDeactivating, setIsDeactivating] = useState(false);
+
 
   useEffect(() => {
     if (profileData) {
@@ -65,6 +72,20 @@ export default function ProfileCard({ profileData, isLoading, fallbackEmail, onP
     }
   };
 
+  const handleDeactivate = async () => {
+    if (!session?.user?.token) return;
+    setIsDeactivating(true);
+    try {
+      await deactivateUser(session.user.token);
+      await signOut({ callbackUrl: "/" });
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setIsDeactivating(false);
+      setShowDeactivateModal(false);
+    }
+  };
+
   const handleCancel = () => {
     setIsEditing(false);
     setErrorMsg(""); 
@@ -72,7 +93,13 @@ export default function ProfileCard({ profileData, isLoading, fallbackEmail, onP
 
   return (
     <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg w-full md:w-1/2 flex flex-col h-full transition-all duration-300">
-      <h1 className="text-2xl font-extrabold text-gray-900 mb-4">Profile Information</h1>
+    <DeactivateAccountModal
+      isOpen={showDeactivateModal}
+      onConfirm={handleDeactivate}
+      onCancel={() => setShowDeactivateModal(false)}
+      isLoading={isDeactivating}
+    />
+    <h1 className="text-2xl font-extrabold text-gray-900 mb-4">Profile Information</h1>
 
       {isLoading ? (
         <div className="flex justify-center items-center flex-grow">
@@ -144,20 +171,20 @@ export default function ProfileCard({ profileData, isLoading, fallbackEmail, onP
             </div>
           )}
 
-          <div className="flex justify-end gap-3 mt-auto pt-4">
+          <div className="mt-auto pt-6">
             {isEditing ? (
-              <>
+              <div className="flex flex-col sm:flex-row w-full gap-3">
                 <button 
                   onClick={handleCancel}
                   disabled={isSaving}
-                  className="bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50" 
+                  className="flex-1 bg-white border border-gray-300 text-gray-700 font-semibold py-2.5 px-4 rounded-xl hover:bg-gray-50 transition-colors disabled:opacity-50" 
                 >
                   Cancel
                 </button>
                 <button 
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="bg-cyan-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-cyan-700 shadow-md hover:shadow-lg transition-all flex items-center gap-2 disabled:opacity-70" 
+                  className="flex-1 bg-cyan-600 text-white font-bold py-2.5 px-6 rounded-xl hover:bg-cyan-700 shadow-md hover:shadow-lg transition-all flex justify-center items-center gap-2 disabled:opacity-70" 
                 >
                   {isSaving ? (
                     <>
@@ -166,15 +193,26 @@ export default function ProfileCard({ profileData, isLoading, fallbackEmail, onP
                     </>
                   ) : "Save Changes"}
                 </button>
-              </>
+              </div>
             ) : (
-              <button 
-                onClick={() => setIsEditing(true)}
-                className="bg-black text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-800 hover:shadow-md transition-all flex items-center gap-2" 
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                Edit Profile
-              </button>
+              <div className="flex flex-col sm:flex-row w-full gap-3">
+                <button
+                  onClick={() => setShowDeactivateModal(true)}
+                  className="flex-1 bg-white border-2 border-red-500 text-red-600 hover:bg-red-50 font-bold py-2.5 px-4 rounded-xl flex justify-center items-center transition-all shadow-sm active:scale-[0.98]"
+                >
+                  <SvgIcon viewBox="0 0 24 24" className="!mr-2" fontSize="small">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6zM19 4h-3.5l-1-1h-5l-1 1H5v2h14z"></path>
+                  </SvgIcon>
+                  Deactivate Account
+                </button>
+                <button 
+                  onClick={() => setIsEditing(true)}
+                  className="flex-1 bg-black text-white font-bold py-2.5 px-6 rounded-xl hover:bg-gray-800 hover:shadow-md transition-all flex justify-center items-center gap-2 active:scale-[0.98]" 
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                  Edit Profile
+                </button>
+              </div>
             )}
           </div>
 

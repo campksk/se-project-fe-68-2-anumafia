@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import getUserProfile from "@/libs/getUserProfile";
-import ProfileCard from "@/components/ProfileCard";
 import ChangePasswordForm from "@/components/ChangePasswordForm";
+import ProfileCard from "@/components/ProfileCard";
 
 export default function ProfileSettingsPage() {
   const { data: session, status } = useSession();
@@ -40,6 +40,7 @@ export default function ProfileSettingsPage() {
     );
   }
 
+
   if (!session) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 pt-24">
@@ -51,17 +52,19 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center pt-24 pb-12 px-4 md:px-12">
+		<main className="min-h-screen bg-gray-50 flex items-center justify-center pt-24 pb-12 px-4 md:px-12">
+        
       <div className="flex flex-col md:flex-row gap-6 md:gap-8 w-full max-w-5xl justify-center items-stretch h-auto">
-        
-        <ProfileCard
-          profileData={profileData}
-          isLoading={isLoadingProfile}
-          fallbackEmail={session.user?.email}
-          onProfileUpdate={fetchProfile}
-        />
-        
+
+		<ProfileCard
+			profileData={profileData}
+			isLoading={isLoadingProfile}
+			fallbackEmail={session.user?.email}
+			onProfileUpdate={fetchProfile}
+		/>
+
         <ChangePasswordForm />
+
       </div>
     </main>
   );

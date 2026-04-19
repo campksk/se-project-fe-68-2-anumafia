@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import updatePassword from "@/libs/updatePassword";
 
 export default function ChangePasswordForm() {
   const { data: session } = useSession();
@@ -16,18 +17,7 @@ export default function ChangePasswordForm() {
     if (!session?.user?.token) return;
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://be-ihaveksk.vercel.app";
-      const res = await fetch(`${backendUrl}/api/v1/auth/updatepassword`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.user.token}`,
-        },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to update password");
+      await updatePassword(session.user.token, currentPassword, newPassword);
 
       setIsError(false);
       setMessage("Password Updated Successfully! 🎉");
