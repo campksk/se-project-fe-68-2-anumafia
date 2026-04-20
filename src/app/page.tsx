@@ -1,6 +1,83 @@
+"use client"
+
+import { useSession } from "next-auth/react";
 import Link from 'next/link';
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const isAdmin = session?.user?.role === "admin";
+
+  if (status === "loading") {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center pt-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600"></div>
+      </main>
+    );
+  }
+
+  if (isAdmin) {
+    return (
+      <main className="min-h-screen bg-slate-900 flex flex-col pt-24 pb-12">
+        <div className="flex-grow flex flex-col items-center px-4 md:px-8">
+          <div className="max-w-6xl w-full">
+            
+            <div className="text-center mb-12 animate-fade-in-down">
+              <span className="inline-block py-1 px-4 rounded-full bg-slate-800 text-cyan-400 border border-slate-700 text-xs font-bold mb-4 tracking-widest shadow-sm uppercase">
+                Admin Command Center
+              </span>
+              <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+                System Overview
+              </h1>
+              <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+                Monitor platform integrity, manage users, and oversee all JobFair 2026 operations.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <Link href="/admin/manage-user" className="group bg-slate-800 border border-slate-700 p-8 rounded-3xl hover:bg-slate-750 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-900/20 hover:-translate-y-1">
+                <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">Manage Users</h2>
+                <p className="text-slate-400 leading-relaxed">Control user accounts, issue warnings, and ban malicious users from the platform.</p>
+              </Link>
+
+              <Link href="/manage/reviews" className="group bg-slate-800 border border-slate-700 p-8 rounded-3xl hover:bg-slate-750 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-900/20 hover:-translate-y-1">
+                <div className="w-16 h-16 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">Manage Reviews</h2>
+                <p className="text-slate-400 leading-relaxed">Moderate user feedback. Approve constructive reviews or remove inappropriate content.</p>
+              </Link>
+
+              <Link href="/mybooking" className="group bg-slate-800 border border-slate-700 p-8 rounded-3xl hover:bg-slate-750 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-900/20 hover:-translate-y-1">
+                <div className="w-16 h-16 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">Manage Bookings</h2>
+                <p className="text-slate-400 leading-relaxed">Oversee all interview sessions. Track schedules and ensure a smooth booking process.</p>
+              </Link>
+
+              <Link href="/companies" className="group bg-slate-800 border border-slate-700 p-8 rounded-3xl hover:bg-slate-750 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-900/20 hover:-translate-y-1">
+                <div className="w-16 h-16 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-white mb-2">Explore Companies</h2>
+                <p className="text-slate-400 leading-relaxed">View the company catalog exactly as users see it to ensure information accuracy.</p>
+              </Link>
+
+            </div>
+          </div>
+        </div>
+
+        <footer className="text-slate-600 py-8 text-center mt-auto">
+          <p className="font-medium text-sm">© 2026 JobFair Admin Portal. Engineered with 💻 and ☕.</p>
+        </footer>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col pt-16">
       
@@ -35,12 +112,14 @@ export default function Home() {
               Explore Companies
             </Link>
             
-            <Link 
-              href="/signup" 
-              className="w-full sm:w-auto bg-white text-gray-800 border-2 border-gray-200 font-bold py-4 px-10 rounded-full hover:border-cyan-500 hover:text-cyan-700 transition-all shadow-sm transform hover:-translate-y-1"
-            >
-              Create Account
-            </Link>
+            {!session && (
+              <Link 
+                href="/signup" 
+                className="w-full sm:w-auto bg-white text-gray-800 border-2 border-gray-200 font-bold py-4 px-10 rounded-full hover:border-cyan-500 hover:text-cyan-700 transition-all shadow-sm transform hover:-translate-y-1"
+              >
+                Create Account
+              </Link>
+            )}
           </div>
         </div>
       </section>
