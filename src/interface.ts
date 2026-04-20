@@ -11,7 +11,7 @@ export interface UserItem {
 	records: {
 		reason: string;
 		issuedAt: string;
-	}
+	}[]
   };
   ban: {
 		isBanned: boolean;

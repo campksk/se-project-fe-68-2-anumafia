@@ -1,6 +1,93 @@
+"use client"
+
+import { useSession } from "next-auth/react";
 import Link from 'next/link';
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  const isAdmin = session?.user?.role === "admin";
+
+  if (status === "loading") {
+    return (
+      <main className="min-h-screen bg-gray-50 flex items-center justify-center pt-16">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600"></div>
+      </main>
+    );
+  }
+
+  if (isAdmin) {
+    return (
+      <main className="min-h-screen bg-gray-50 flex flex-col pt-16 relative overflow-hidden">
+        
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+           <div className="absolute -top-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-cyan-200/40 blur-3xl"></div>
+           <div className="absolute top-[40%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-200/40 blur-3xl"></div>
+        </div>
+
+        <section className="relative flex-grow flex flex-col items-center justify-center pt-24 pb-32 px-4 z-10">
+          <div className="max-w-6xl w-full">
+            
+            <div className="text-center mb-16 animate-fade-in-down">
+              <span className="inline-block py-1.5 px-4 rounded-full bg-slate-800 text-white text-xs font-bold mb-6 tracking-widest shadow-md uppercase hover:bg-slate-700 transition-colors cursor-default">
+                Admin Command Center
+              </span>
+              
+              <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight drop-shadow-sm">
+                System <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Overview</span>
+              </h1>
+              
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Monitor platform integrity, manage users, and oversee all JobFair 2026 operations from your central dashboard.
+              </p>
+              
+              <div className="w-24 h-1.5 bg-gradient-to-r from-cyan-500 to-blue-500 mx-auto rounded-full mt-8 opacity-80"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              
+              <Link href="/admin/manage-user" className="bg-white border border-gray-100 p-8 rounded-3xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group z-10 relative overflow-hidden">
+                <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">Manage Users</h2>
+                <p className="text-gray-600 leading-relaxed">Control user accounts, issue warnings, and ban malicious users from the platform.</p>
+              </Link>
+
+              <Link href="/manage/reviews" className="bg-white border border-gray-100 p-8 rounded-3xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group z-10 relative overflow-hidden">
+                <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">Manage Reviews</h2>
+                <p className="text-gray-600 leading-relaxed">Moderate user feedback. Approve constructive reviews or remove inappropriate content.</p>
+              </Link>
+
+              <Link href="/mybooking" className="bg-white border border-gray-100 p-8 rounded-3xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group z-10 relative overflow-hidden">
+                <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">Manage Bookings</h2>
+                <p className="text-gray-600 leading-relaxed">Oversee all interview sessions. Track schedules and ensure a smooth booking process.</p>
+              </Link>
+
+              <Link href="/companies" className="bg-white border border-gray-100 p-8 rounded-3xl hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group z-10 relative overflow-hidden">
+                <div className="w-16 h-16 bg-cyan-100 text-cyan-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">Explore Companies</h2>
+                <p className="text-gray-600 leading-relaxed">View the company catalog exactly as users see it to ensure information accuracy.</p>
+              </Link>
+
+            </div>
+          </div>
+        </section>
+
+        <footer className="bg-gray-900 text-gray-400 py-8 text-center z-10 mt-auto">
+          <p className="font-medium">© 2026 JobFair Registration Platform. Engineered with 💻 and ☕.</p>
+        </footer>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col pt-16">
       
@@ -35,12 +122,14 @@ export default function Home() {
               Explore Companies
             </Link>
             
-            <Link 
-              href="/signup" 
-              className="w-full sm:w-auto bg-white text-gray-800 border-2 border-gray-200 font-bold py-4 px-10 rounded-full hover:border-cyan-500 hover:text-cyan-700 transition-all shadow-sm transform hover:-translate-y-1"
-            >
-              Create Account
-            </Link>
+            {!session && (
+              <Link 
+                href="/signup" 
+                className="w-full sm:w-auto bg-white text-gray-800 border-2 border-gray-200 font-bold py-4 px-10 rounded-full hover:border-cyan-500 hover:text-cyan-700 transition-all shadow-sm transform hover:-translate-y-1"
+              >
+                Create Account
+              </Link>
+            )}
           </div>
         </div>
       </section>
@@ -83,7 +172,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-gray-900 text-gray-400 py-8 text-center z-10">
+      <footer className="bg-gray-900 text-gray-400 py-8 text-center z-10 mt-auto">
         <p className="font-medium">© 2026 JobFair Registration Platform. Engineered with 💻 and ☕.</p>
       </footer>
 
