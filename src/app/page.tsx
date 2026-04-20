@@ -24,7 +24,7 @@ export default function Home() {
            <div className="absolute top-[40%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-200/40 blur-3xl"></div>
         </div>
 
-        <div className="flex-grow flex flex-col items-center px-4 md:px-8 py-16 z-10">
+        <section className="relative flex-grow flex flex-col items-center justify-center pt-24 pb-32 px-4 z-10">
           <div className="max-w-6xl w-full">
             
             <div className="text-center mb-16 animate-fade-in-down">
@@ -76,7 +76,7 @@ export default function Home() {
 
             </div>
           </div>
-        </div>
+        </section>
 
         <footer className="bg-gray-900 text-gray-400 py-8 text-center z-10 mt-auto">
           <p className="font-medium">© 2026 JobFair Registration Platform. Engineered with 💻 and ☕.</p>
@@ -169,7 +169,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-gray-900 text-gray-400 py-8 text-center z-10">
+      <footer className="bg-gray-900 text-gray-400 py-8 text-center z-10 mt-auto">
         <p className="font-medium">© 2026 JobFair Registration Platform. Engineered with 💻 and ☕.</p>
       </footer>
 
