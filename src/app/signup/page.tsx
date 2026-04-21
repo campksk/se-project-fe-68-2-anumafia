@@ -9,6 +9,7 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "", tel: "" });
   const [error, setError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [ruleAccepted, setRuleAccepted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +44,12 @@ export default function RegisterPage() {
       setError(err.message);
     }
   };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRuleAccepted(e.target.checked);
+  };
+
+  const isButtonDisabled = !ruleAccepted;
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 px-4 pt-16">
@@ -81,7 +88,15 @@ export default function RegisterPage() {
             {passwordError && <p className="text-red-500 text-xs mt-1">{passwordError}</p>}
           </div>
 
-          <button type="submit" className="w-full bg-cyan-600 text-white font-bold py-3 rounded-md hover:bg-cyan-700 transition shadow-md mt-6">
+          <div className="flex items-center gap-3 mt-4">
+            <input type="checkbox" id="ruleCheckbox" checked={ruleAccepted} onChange={handleCheckboxChange} className="w-4 h-4 cursor-pointer accent-cyan-600"/>
+            <label htmlFor="termsCheckbox" className="text-sm text-gray-600 cursor-pointer ">
+              I agree to the <Link href="/rulesanddatapolicy" target="_blank" className="text-cyan-600 hover:underline">terms and conditions</Link>
+            </label>
+          </div>
+
+          <button type="submit" disabled={isButtonDisabled}
+          className={`w-full font-bold py-3 rounded-md transition shadow-md mt-6 ${isButtonDisabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-cyan-600 text-white hover:bg-cyan-700'}`}>
             Register
           </button>
         </form>
