@@ -43,6 +43,15 @@ export default function CompanyForm({ company }: { company?: CompanyItem }) {
     }
   };
 
+  if(isEdit && !((session?.user.role === 'company' && session?.user?._id === company.user) || session?.user?.role === "admin")) {
+    return (
+      <div className="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-red-600 text-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Unauthorized</h2>
+        <p className="text-gray-600">You do not have permission to edit this company.</p>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-xl space-y-4 border-t-4 border-red-600">
       <input type="text" placeholder="Company Name" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full border-b-2 py-2 focus:border-red-600 outline-none" />

@@ -21,12 +21,16 @@ export interface UserItem {
 
 export interface CompanyItem {
   _id: string;
+  user: string
   name: string;
   address: string;
   website: string;
   description: string;
   tel: string;
-  id: string; 
+  id: string;
+  public: boolean;
+  ratingAverage: number;
+  ratingCount: number;
 }
 
 export interface CompanyJson {
