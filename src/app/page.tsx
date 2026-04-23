@@ -100,9 +100,6 @@ export default function Home() {
 
         <div className="relative z-10">
           <div className="text-center mb-10 animate-fade-in-down">
-            <span className="inline-block py-1.5 px-4 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold mb-4 tracking-widest shadow-sm uppercase">
-              Company Portal
-            </span>
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
               Manage Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Workspace</span>
             </h1>
