@@ -2,10 +2,12 @@
 
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
+import CompanyDashboard from "@/components/CompanyDashboard";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const isAdmin = session?.user?.role === "admin";
+  const isCompany = session?.user?.role === "company";
 
   if (status === "loading") {
     return (
@@ -73,9 +75,10 @@ export default function Home() {
                 <div className="w-16 h-16 bg-cyan-100 text-cyan-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-sm">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                 </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3">Manage Companies</h2>
-                  <p className="text-gray-600 leading-relaxed">Register new company accounts, oversee the directory, and manage company statuses.</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">Manage Companies</h2>
+                <p className="text-gray-600 leading-relaxed">Register new company accounts, oversee the directory, and manage company statuses.</p>
               </Link>
+              
             </div>
           </div>
         </section>
@@ -83,6 +86,30 @@ export default function Home() {
         <footer className="bg-gray-900 text-gray-400 py-8 text-center z-10 mt-auto">
           <p className="font-medium">© 2026 JobFair Registration Platform. Engineered with 💻 and ☕.</p>
         </footer>
+      </main>
+    );
+  }
+
+  if (isCompany) {
+    return (
+      <main className="min-h-screen bg-gray-50 pt-24 pb-16 px-4 md:px-12 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+           <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-cyan-200/30 blur-3xl"></div>
+           <div className="absolute top-[30%] -right-[10%] w-[40%] h-[40%] rounded-full bg-blue-200/30 blur-3xl"></div>
+        </div>
+
+        <div className="relative z-10">
+          <div className="text-center mb-10 animate-fade-in-down">
+            <span className="inline-block py-1.5 px-4 rounded-full bg-cyan-100 text-cyan-800 text-xs font-bold mb-4 tracking-widest shadow-sm uppercase">
+              Company Portal
+            </span>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+              Manage Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-blue-600">Workspace</span>
+            </h1>
+          </div>
+
+          <CompanyDashboard />
+        </div>
       </main>
     );
   }
