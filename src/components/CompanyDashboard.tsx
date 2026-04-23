@@ -24,21 +24,27 @@ export default function CompanyDashboard() {
       try {
         setLoading(true);
         const companyRes = await getCompanyByUserId(session.user._id);
-        
         const myCompany = companyRes.data[0] || companyRes.data; 
         setCompany(myCompany);
 
-        if (myCompany?._id) {
+        const companyId = myCompany?._id || myCompany?.id;
+
+        if (companyId) {
+          console.log("✅ Found Company ID:", companyId);
+          
           const [interviewsRes, reviewsRes] = await Promise.all([
-            getInterviews(session.user.token),
-            getReviews(myCompany._id)
+            getInterviews(session.user.token, companyId),
+            getReviews(companyId)
           ]);
 
           setInterviews(interviewsRes.data || []);
           setReviews(reviewsRes.data || []);
+
+          console.log("Reviews Data from Backend:", reviewsRes.data);
+          console.log("Interviews Data from Backend:", interviewsRes);
         }
       } catch (error) {
-        console.error("Error fetching company dashboard data:", error);
+        console.error("Error fetching dashboard data:", error);
       } finally {
         setLoading(false);
       }
@@ -131,22 +137,29 @@ export default function CompanyDashboard() {
           <div className="space-y-4 animate-fade-in">
             {interviews.length > 0 ? (
               interviews.map((interview: any, idx) => (
-                <div key={interview._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div key={interview._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
                   <div>
-                    <h4 className="font-bold text-gray-900 text-lg">{interview.user?.name || "Candidate Name"}</h4>
-                    <p className="text-gray-500 text-sm mt-1">
-                      Date: {new Date(interview.apptDate || interview.createdAt).toLocaleDateString()}
+                    <h4 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                      👤 {interview.user?.name || "Candidate Name"}
+                    </h4>
+                    <p className="text-gray-500 text-sm mt-1 flex items-center gap-2">
+                      📅 Date: <span className="font-semibold text-cyan-700">{new Date(interview.apptDate || interview.createdAt).toLocaleDateString()}</span>
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
-                     <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-lg capitalize">
+                     <span className={`text-xs font-bold px-3 py-1.5 rounded-lg capitalize border ${
+                       interview.status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                       interview.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                       'bg-blue-50 text-blue-800 border-blue-200'
+                     }`}>
                        {interview.status || "Pending"}
                      </span>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-gray-500">
+              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-gray-500 flex flex-col items-center justify-center">
+                <div className="text-4xl mb-3 opacity-50">📭</div>
                 No interviews scheduled yet.
               </div>
             )}
@@ -157,20 +170,23 @@ export default function CompanyDashboard() {
           <div className="space-y-4 animate-fade-in">
             {reviews.length > 0 ? (
               reviews.map((review: any, idx) => (
-                <div key={review._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div key={review._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-amber-100 text-amber-700 font-bold px-2.5 py-1 rounded-md text-sm flex items-center gap-1">
+                    <span className="bg-amber-100 text-amber-700 font-bold px-2.5 py-1 rounded-md text-sm flex items-center gap-1 shadow-sm">
                       ★ {review.rating || 5}
                     </span>
-                    <span className="text-gray-400 text-xs">
+                    <span className="text-gray-400 text-xs font-medium">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-gray-700 leading-relaxed text-sm">"{review.comment || "No comment."}"</p>
+                  <p className="text-gray-700 leading-relaxed text-sm">
+                    "{review.reviewText || "No comment."}"
+                  </p>
                 </div>
               ))
             ) : (
-              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-gray-500">
+              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-gray-500 flex flex-col items-center justify-center">
+                <div className="text-4xl mb-3 opacity-50">⭐</div>
                 No reviews available for your company.
               </div>
             )}

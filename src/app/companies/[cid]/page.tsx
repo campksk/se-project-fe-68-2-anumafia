@@ -6,15 +6,19 @@ import Link from "next/link";
 import getReviews from "@/libs/getReviews";
 import ReviewList from "@/components/ReviewList";
 import { ReviewJson } from "@/interface";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 
 export default async function CompanyDetailPage({ params }: { params: Promise<{ cid: string }> }) {
   const { cid } = await params;
   
-  // ดึงข้อมูลบริษัท
+  const session = await getServerSession(authOptions);
+  const role = session?.user?.role;
+  const hideForms = role === "admin" || role === "company";
+  
   const companyDetail = await getCompany(cid);
   const company = companyDetail.data;
 
-  // ดึงข้อมูลรีวิวทั้งหมดของบริษัทนี้
   const reviewsData = await getReviews(cid) as ReviewJson;
   const reviews = reviewsData.data || [];
 
@@ -37,12 +41,12 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
               <Link href="/companies" className="text-cyan-600 hover:text-cyan-800 font-semibold mb-6 inline-flex items-center gap-2 transition-colors">
                 <span>←</span> Back to Catalog
               </Link>
-             
+              
               <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{company.name}</h1>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
                 {company.description}
               </p>
-             
+              
               <div className="space-y-4 bg-gray-50 p-6 rounded-xl border border-gray-200">
                 <h3 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4">Contact Information</h3>
                 <p className="text-gray-700 flex items-start gap-2">
@@ -67,17 +71,22 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             </div>
           </div>
 
-          <div className="w-full md:w-[400px] flex justify-center md:justify-end shrink-0">
-            <InterviewForm companyId={company._id || company.id} companyName={company.name} />
-          </div>
+          {!hideForms && (
+            <div className="w-full md:w-[400px] flex justify-center md:justify-end shrink-0">
+              <InterviewForm companyId={company._id || company.id} companyName={company.name} />
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
-           <ReviewForm companyId={company._id || company.id} />
-
-           <div className="mt-8 pt-8 border-t border-gray-100">
-              <ReviewList reviews={reviews} companyId={cid || company.id} />
-           </div>
+           {!hideForms && (
+             <>
+               <ReviewForm companyId={company._id || company.id} />
+               <div className="mt-8 pt-8 border-t border-gray-100"></div>
+             </>
+           )}
+           
+           <ReviewList reviews={reviews} companyId={cid || company.id} />
         </div>
        
       </div>
