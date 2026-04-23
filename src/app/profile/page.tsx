@@ -41,16 +41,6 @@ export default function ProfileSettingsPage() {
   }
 
 
-  if (!session) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 pt-24">
-        <p className="text-xl font-bold text-gray-700 bg-white px-8 py-4 rounded-xl shadow-sm border border-gray-200">
-          Please Log In...
-        </p>
-      </div>
-    );
-  }
-
   return (
 		<main className="min-h-screen bg-gray-50 flex items-center justify-center pt-24 pb-12 px-4 md:px-12">
         
@@ -59,7 +49,7 @@ export default function ProfileSettingsPage() {
 		<ProfileCard
 			profileData={profileData}
 			isLoading={isLoadingProfile}
-			fallbackEmail={session.user?.email}
+			fallbackEmail={session?.user?.email}
 			onProfileUpdate={fetchProfile}
 		/>
 
