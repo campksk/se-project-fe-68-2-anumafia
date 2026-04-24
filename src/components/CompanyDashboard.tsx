@@ -214,15 +214,7 @@ export default function CompanyDashboard() {
 
             </div>
           </div>
-          <div className="flex items-center gap-2 pb-5">
-            <Link
-              href={`/companies/${company._id || company.id}/edit`}
-              className="bg-gray-50 hover:bg-cyan-50 text-gray-600 hover:text-cyan-700 border border-gray-200 hover:border-cyan-200 font-bold py-2 px-4 rounded-xl flex items-center gap-2 transition-all shadow-sm"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-              <span className="hidden sm:inline">Edit Info</span>
-            </Link>
-          </div>
+
           <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mt-4">
             <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">Company Details</h3>
             <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
