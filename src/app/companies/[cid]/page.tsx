@@ -20,7 +20,8 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
     (interview: any) => interview.attendanceStatus === "attended"
   );
 
-  const hideForms = role === "admin" || role === "company" || !hasAttended ;
+  const hideInterviewForm = role === "admin" || role === "company";
+  const hideReviewForm = role === "admin" || role === "company" || !hasAttended;
   
   const companyDetail = await getCompany(cid);
   const company = companyDetail.data;
@@ -77,7 +78,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             </div>
           </div>
 
-          {!hideForms && (
+          {!hideInterviewForm && (
             <div className="w-full md:w-[400px] flex justify-center md:justify-end shrink-0">
               <InterviewForm companyId={company._id || company.id} companyName={company.name} />
             </div>
@@ -85,7 +86,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </div>
 
         <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
-           {!hideForms && (
+           {!hideReviewForm && (
              <>
                <ReviewForm companyId={company._id || company.id} />
                <div className="mt-8 pt-8 border-t border-gray-100"></div>
