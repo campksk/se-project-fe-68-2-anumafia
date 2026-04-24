@@ -67,6 +67,7 @@ export default function BookingList({ initialBookings, token, role }: { initialB
         const company = booking.company as CompanyItem;
         const isEditing = editingId === booking._id;
         const displayDate = new Date(booking.sessionDate).toLocaleDateString('en-GB');
+        const statusColor = booking?.attendanceStatus === "pending" ? "text-gray-500" : booking?.attendanceStatus === "attended" ? "text-green-500" : booking?.attendanceStatus === "absent" ? "text-red-500" : "";
 
         return (
           <div key={booking._id} className="bg-white p-6 rounded-2xl shadow-md border-l-4 border-cyan-600 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 transition-all hover:shadow-lg">
@@ -93,6 +94,7 @@ export default function BookingList({ initialBookings, token, role }: { initialB
               <div className="space-y-1.5 mt-2">
                 <p className="text-gray-600 flex items-start gap-2"><span className="font-semibold min-w-[80px]">📍 Location:</span> <span>{company?.address || "N/A"}</span></p>
                 <p className="text-gray-600 flex items-center gap-2"><span className="font-semibold min-w-[80px]">📞 Tel:</span> <span>{company?.tel || "N/A"}</span></p>
+                <p className="text-gray-600 flex items-center gap-2"><span className="font-semibold min-w-[80px]">Attendance Status:</span> <span className={statusColor} >{booking?.attendanceStatus || "N/A"}</span></p>
               </div>
               
               {isEditing ? (
