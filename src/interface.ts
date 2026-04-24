@@ -45,7 +45,7 @@ export interface InterviewItem {
   company: CompanyItem; 
   user: UserItem;
   sessionDate: string; 
-  attendanceStatus:string;
+  attendanceStatus: 'pending'  | 'attended' | 'absent'; 
   createdAt: string;
 }
 

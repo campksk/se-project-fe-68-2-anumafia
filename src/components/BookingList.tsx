@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { InterviewItem, CompanyItem } from "@/interface";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function BookingList({ initialBookings, token, role }: { initialBookings: InterviewItem[], token: string, role?: string }) {
   const [bookings, setBookings] = useState<InterviewItem[]>(initialBookings);
@@ -66,6 +67,8 @@ export default function BookingList({ initialBookings, token, role }: { initialB
       {bookings.map(booking => {
         const company = booking.company as CompanyItem;
         const isEditing = editingId === booking._id;
+        const cantEdit = (booking.attendanceStatus !== "pending")
+        const canReview = (booking.attendanceStatus === "attended")
         const displayDate = new Date(booking.sessionDate).toLocaleDateString('en-GB');
         const statusColor = booking?.attendanceStatus === "pending" ? "text-gray-500" : booking?.attendanceStatus === "attended" ? "text-green-500" : booking?.attendanceStatus === "absent" ? "text-red-500" : "";
 
@@ -122,18 +125,31 @@ export default function BookingList({ initialBookings, token, role }: { initialB
 
             {!isEditing && (
               <div className="flex flex-row md:flex-col gap-3 w-full md:w-auto mt-6 md:mt-0">
-                <button 
-                  onClick={() => { setEditingId(booking._id); setEditDate(booking.sessionDate.split('T')[0]); }} 
-                  className="flex-1 md:flex-none bg-amber-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-amber-600 transition shadow-sm"
-                >
-                  Edit Date
-                </button>
-                <button 
-                  onClick={() => handleDelete(booking._id)} 
-                  className="flex-1 md:flex-none bg-red-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-600 transition shadow-sm"
-                >
-                  Cancel Booking
-                </button>
+                {!cantEdit && (
+                  <>
+                    <button 
+                      onClick={() => { setEditingId(booking._id); setEditDate(booking.sessionDate.split('T')[0]); }} 
+                      className="flex-1 md:flex-none bg-amber-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-amber-600 transition shadow-sm"
+                    >
+                      Edit Date
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(booking._id)} 
+                      className="flex-1 md:flex-none bg-red-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-red-600 transition shadow-sm"
+                    >
+                      Cancel Booking
+                    </button>
+                  </>
+                )}
+                {canReview && (
+                  <Link href={`/companies/${company._id || company.id}`}>
+                    <button 
+                      className="flex-1 md:flex-none bg-blue-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-600 transition shadow-sm w-full"
+                    >
+                      Write a Review
+                    </button>
+                  </Link>
+                )}
               </div>
             )}
           </div>

@@ -8,13 +8,20 @@ import ReviewList from "@/components/ReviewList";
 import { ReviewJson } from "@/interface";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-
+import getInterviews from "@/libs/getInterviews";
 export default async function CompanyDetailPage({ params }: { params: Promise<{ cid: string }> }) {
   const { cid } = await params;
   
   const session = await getServerSession(authOptions);
   const role = session?.user?.role;
-  const hideForms = role === "admin" || role === "company";
+  
+  const interviews = role === "user" && session?.user?.token ? (await getInterviews(session.user.token, cid) as any)?.data || [] : [];
+  const hasAttended = interviews.some(
+    (interview: any) => interview.attendanceStatus === "attended" && (interview.company?._id === cid || interview.company?.id === cid)
+  );
+
+  const hideInterviewForm = role === "admin" || role === "company";
+  const hideReviewForm = role === "admin" || role === "company" || !hasAttended;
   
   const companyDetail = await getCompany(cid);
   const company = companyDetail.data;
@@ -71,7 +78,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
             </div>
           </div>
 
-          {!hideForms && (
+          {!hideInterviewForm && (
             <div className="w-full md:w-[400px] flex justify-center md:justify-end shrink-0">
               <InterviewForm companyId={company._id || company.id} companyName={company.name} />
             </div>
@@ -79,7 +86,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
         </div>
 
         <div className="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
-           {!hideForms && (
+           {!hideReviewForm && (
              <>
                <ReviewForm companyId={company._id || company.id} />
                <div className="mt-8 pt-8 border-t border-gray-100"></div>
