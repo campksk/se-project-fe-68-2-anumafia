@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { InterviewItem, CompanyItem } from "@/interface";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function BookingList({ initialBookings, token, role }: { initialBookings: InterviewItem[], token: string, role?: string }) {
   const [bookings, setBookings] = useState<InterviewItem[]>(initialBookings);
@@ -141,11 +142,13 @@ export default function BookingList({ initialBookings, token, role }: { initialB
                   </>
                 )}
                 {canReview && (
-                  <button 
-                    className="flex-1 md:flex-none bg-blue-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-600 transition shadow-sm"
-                  >
-                    Write a Review
-                  </button>
+                  <Link href={`/companies/${company._id || company.id}`}>
+                    <button 
+                      className="flex-1 md:flex-none bg-blue-500 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-600 transition shadow-sm w-full"
+                    >
+                      Write a Review
+                    </button>
+                  </Link>
                 )}
               </div>
             )}
