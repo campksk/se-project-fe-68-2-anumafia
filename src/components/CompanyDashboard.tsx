@@ -7,6 +7,8 @@ import getCompanyByUserId from "@/libs/getCompanyByUserId";
 import getInterviews from "@/libs/getInterviews";
 import getReviews from "@/libs/getReviews";
 import { CompanyItem } from "@/interface";
+import Switch from "@mui/material/Switch";
+import togglePublic from "@/libs/togglePublic";
 
 export default function CompanyDashboard() {
   const { data: session } = useSession();
@@ -49,6 +51,26 @@ export default function CompanyDashboard() {
     fetchDashboardData();
   }, [session]);
 
+  const [isDisable, setIsDisable] = useState(false);
+
+  const handleSwitch = async (e : React.ChangeEvent<HTMLInputElement>) => {
+    setIsDisable(true);
+
+    setCompany((prev) => {
+      if (!prev) return prev;
+      const updatedCompany = { ...prev, public: e.target.checked };
+      return updatedCompany;
+    });
+
+    try {
+      await togglePublic(e.target.checked, company?._id || company?.id as string, session?.user.token as string);
+    } catch (error) {
+      console.error("❌ Error toggling public status:", error);
+    } finally {
+      setTimeout(() => setIsDisable(false), 3000);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -81,14 +103,25 @@ export default function CompanyDashboard() {
                 {company.address || "Address not provided"}
               </p>
             </div>
-            
-            <Link 
-              href={`/companies/${company._id || company.id}/edit`} 
-              className="bg-gray-50 hover:bg-cyan-50 text-gray-600 hover:text-cyan-700 border border-gray-200 hover:border-cyan-200 font-bold py-2 px-4 rounded-xl flex items-center gap-2 transition-all shadow-sm"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-              <span className="hidden sm:inline">Edit Info</span>
-            </Link>
+            <div className="flex gap-5">
+              <div className="flex items-center">
+                <Switch 
+                  checked={company.public}
+                  onChange={handleSwitch}
+                  disabled={isDisable}
+                  color="primary"
+                />
+                <p>Public</p>
+              </div>
+              <Link 
+                href={`/companies/${company._id || company.id}/edit`} 
+                className="bg-gray-50 hover:bg-cyan-50 text-gray-600 hover:text-cyan-700 border border-gray-200 hover:border-cyan-200 font-bold py-2 px-4 rounded-xl flex items-center gap-2 transition-all shadow-sm"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                <span className="hidden sm:inline">Edit Info</span>
+              </Link>
+
+            </div>
           </div>
           
           <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mt-4">
@@ -153,11 +186,11 @@ export default function CompanyDashboard() {
                   </div>
                   <div className="flex items-center gap-3">
                      <span className={`text-xs font-bold px-3 py-1.5 rounded-lg capitalize border ${
-                       interview.status === 'confirmed' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-                       interview.status === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
+                       interview.attendanceStatus === 'attended' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                       interview.attendanceStatus === 'rejected' ? 'bg-red-50 text-red-700 border-red-200' :
                        'bg-blue-50 text-blue-800 border-blue-200'
                      }`}>
-                       {interview.status || "Pending"}
+                       {interview.attendanceStatus || "Pending"}
                      </span>
                   </div>
                 </div>

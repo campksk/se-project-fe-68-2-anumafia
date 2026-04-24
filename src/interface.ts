@@ -45,6 +45,7 @@ export interface InterviewItem {
   company: CompanyItem; 
   user: UserItem;
   sessionDate: string; 
+  attendanceStatus:string;
   createdAt: string;
 }
 

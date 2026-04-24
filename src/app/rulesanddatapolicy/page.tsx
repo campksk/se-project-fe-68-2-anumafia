@@ -81,7 +81,7 @@ export default function DataPolicyPage() {
               <p className="text-[10px] font-semibold uppercase tracking-widest text-cyan-600 mb-2">How We Use Your Data</p>
               <div className="py-2.5 border-b border-gray-50">
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Data is used only for the purposes stated above and never sold to third parties.
+                   Data is shared only with the company you book an interview with and the site administrators for content moderation, and is never sold to any third parties. 
                 </p>
               </div>
               <div className="py-2.5">

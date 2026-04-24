@@ -19,7 +19,6 @@ export default function TopMenu() {
 
   return (
     <nav className="h-16 bg-white w-full fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-gray-200">
-      {/* 🎬 แก้ตรงนี้: เอา max-w-7xl mx-auto ออก เพื่อให้เมนูกางสุดขอบจอเหมือนเดิม */}
       <div className="flex flex-row items-center justify-between px-6 md:px-12 h-full">
         
         <div>
@@ -39,7 +38,7 @@ export default function TopMenu() {
           )}
 
           {isCompany && (
-            <TopMenuItem title="Explore Another Company" pageRef="/companies" />
+            <TopMenuItem title="Explore Other Company" pageRef="/companies" />
           )}
 
           {session ? (
@@ -96,7 +95,7 @@ export default function TopMenu() {
           {isCompany && (
             <>
               <Link href="/companies" onClick={closeMenu} className="font-semibold text-lg text-gray-800 hover:text-cyan-600 transition-colors">
-                Explore Another Company
+                Explore Other Company
               </Link>
               <hr className="border-gray-100 my-2" />
             </>
