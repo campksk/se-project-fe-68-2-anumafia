@@ -29,7 +29,7 @@ export default function CompanyForm({ company }: { company?: CompanyItem }) {
     e.preventDefault();
     if (!session?.user?.token) return;
 
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
     const url = isEdit ? `${backendUrl}/api/v1/companies/${company?._id || company?.id}` : `${backendUrl}/api/v1/companies`;
     const method = isEdit ? "PUT" : "POST";
 

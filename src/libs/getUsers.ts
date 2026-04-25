@@ -1,5 +1,5 @@
 export default async function getUsers(token: string, queryString: string = "") {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users${queryString}`, {
+  const response = await fetch(`${typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users${queryString}`, {
     method: "GET",
     headers: {
       authorization: `Bearer ${token}`,

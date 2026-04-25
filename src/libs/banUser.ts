@@ -3,7 +3,7 @@ export default async function banUser(
   token: string,
   reason: string
 ) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const res = await fetch(`${backendUrl}/api/v1/users/ban/${userId}`, {
     method: "PUT",

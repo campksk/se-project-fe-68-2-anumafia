@@ -1,5 +1,5 @@
 export default async function yellowCardUser(userId: string, token: string, reason: string) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const res = await fetch(`${backendUrl}/api/v1/users/yellowcard/${userId}`, {
     method: "PUT",

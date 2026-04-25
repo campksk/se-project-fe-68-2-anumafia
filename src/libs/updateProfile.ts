@@ -1,5 +1,5 @@
 export default async function updateProfile(token: string, newName: string, newTel: string) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/me`, {
+  const response = await fetch(`${typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/me`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

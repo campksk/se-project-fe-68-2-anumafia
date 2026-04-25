@@ -12,7 +12,7 @@ export default function BookingList({ initialBookings, token, role }: { initialB
   const router = useRouter();
 
   const isAdmin = role === "admin";
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to cancel this interview?")) return;

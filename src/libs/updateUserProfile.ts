@@ -5,7 +5,7 @@ type UpdateProfile = {
 };
 
 export default async function updateUserProfile(updateProfile : UpdateProfile, token: string) {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
     
 	if(!updateProfile.name && !updateProfile.email && !updateProfile.tel) {
 		throw new Error("At least one field must be provided to update the profile");

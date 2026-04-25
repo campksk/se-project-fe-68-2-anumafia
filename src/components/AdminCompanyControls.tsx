@@ -11,7 +11,7 @@ export default function AdminCompanyControls({ companyId }: { companyId: string 
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to DELETE this company?")) return;
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
     await fetch(`${backendUrl}/api/v1/companies/${companyId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session.user.token}` }

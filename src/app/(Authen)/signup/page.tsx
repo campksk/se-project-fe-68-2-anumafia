@@ -22,7 +22,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
       const res = await fetch(`${backendUrl}/api/v1/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

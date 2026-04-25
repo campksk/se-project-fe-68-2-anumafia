@@ -29,7 +29,7 @@ export default function InterviewForm({ companyId, companyName }: { companyId: s
     try {
       const sessionDate = `${bookDate}T11:00:00Z`;
 
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
 
       const response = await fetch(`${backendUrl}/api/v1/companies/${companyId}/interviews`, {
         method: "POST",
