@@ -1,13 +1,8 @@
 import CompanyCatalog from '@/components/CompanyCatalog';
 import getCompanies from '@/libs/getCompanies';
 import { Suspense } from 'react';
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
-import Link from "next/link";
 
 export default async function CompaniesPage() {
-  const session = await getServerSession(authOptions);
-  const isAdmin = session?.user?.role === "admin";
   
   const companiesPromise = getCompanies();
 
@@ -16,37 +11,13 @@ export default async function CompaniesPage() {
       <div className="max-w-7xl mx-auto">
         
         <div className="text-center mb-10 animate-fade-in-down">
-          {isAdmin ? (
-            <>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
-                Manage <span className="text-cyan-600">Companies</span>
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Register new company accounts, oversee the directory, and manage company statuses.
-              </p>
-            </>
-          ) : (
-            <>
-              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
-                Explore <span className="text-cyan-600">Companies</span>
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Find your dream company and book an interview session today.
-              </p>
-            </>
-          )}
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 tracking-tight">
+            Explore <span className="text-cyan-600">Companies</span>
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Find your dream company and book an interview session today.
+          </p>
         </div>
-
-        {isAdmin && (
-          <div className="flex justify-center mb-10">
-            <Link 
-              href="/companies/create" 
-              className="bg-red-600 text-white font-extrabold py-3 px-8 rounded-full hover:bg-red-700 transition-all shadow-lg hover:shadow-red-500/30 transform hover:-translate-y-1 flex items-center gap-2"
-            >
-              <span className="text-lg">Create Company Account</span>
-            </Link>
-          </div>
-        )}
 
         <Suspense fallback={
           <div className="flex flex-col items-center justify-center mt-20 space-y-4">
