@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function getCompany(id: string) {
-  const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = getBackendApi();
   
   const response = await fetch(`${backendUrl}/api/v1/companies/${id}`);
 

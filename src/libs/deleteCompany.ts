@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function deleteCompany(companyId: string, token: string) {
-  const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = getBackendApi();
 
   const res = await fetch(`${backendUrl}/api/v1/companies/${companyId}`, {
     method: "DELETE",

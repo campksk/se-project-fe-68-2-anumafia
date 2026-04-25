@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function getUserProfile(token: string) {
-  const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = getBackendApi();
   const response = await fetch(`${backendUrl}/api/v1/auth/me`, {
     method: "GET",
     headers: {

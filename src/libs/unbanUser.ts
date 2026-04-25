@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function unbanUser(userId: string, token: string) {
-  const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = getBackendApi();
 
   const res = await fetch(`${backendUrl}/api/v1/users/unban/${userId}`, {
     method: "PUT",

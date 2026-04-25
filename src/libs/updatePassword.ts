@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function updatePassword(token: string, currentPassword: string, newPassword: string) {
-	const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+	const backendUrl = getBackendApi();
 
 	const res = await fetch(`${backendUrl}/api/v1/auth/updatepassword`, {
 		method: "PUT",

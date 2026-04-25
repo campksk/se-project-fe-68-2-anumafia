@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import getBackendApi from "@/libs/getBackendApi";
 
 export default function InterviewForm({ companyId, companyName }: { companyId: string, companyName: string }) {
   const { data: session } = useSession();
@@ -29,7 +30,7 @@ export default function InterviewForm({ companyId, companyName }: { companyId: s
     try {
       const sessionDate = `${bookDate}T11:00:00Z`;
 
-      const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+      const backendUrl = getBackendApi();
 
       const response = await fetch(`${backendUrl}/api/v1/companies/${companyId}/interviews`, {
         method: "POST",

@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import getBackendApi from "@/libs/getBackendApi";
 
 export default function AdminCompanyControls({ companyId }: { companyId: string }) {
   const { data: session } = useSession();
@@ -11,7 +12,7 @@ export default function AdminCompanyControls({ companyId }: { companyId: string 
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to DELETE this company?")) return;
-    const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = getBackendApi();
     await fetch(`${backendUrl}/api/v1/companies/${companyId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session.user.token}` }

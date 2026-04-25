@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { CompanyItem } from "@/interface";
+import getBackendApi from "@/libs/getBackendApi";
 
 export default function CompanyForm({ company }: { company?: CompanyItem }) {
   const { data: session } = useSession();
@@ -29,7 +30,7 @@ export default function CompanyForm({ company }: { company?: CompanyItem }) {
     e.preventDefault();
     if (!session?.user?.token) return;
 
-    const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = getBackendApi();
     const url = isEdit ? `${backendUrl}/api/v1/companies/${company?._id || company?.id}` : `${backendUrl}/api/v1/companies`;
     const method = isEdit ? "PUT" : "POST";
 

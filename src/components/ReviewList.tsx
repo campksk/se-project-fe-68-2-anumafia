@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { ReviewItem } from "@/interface";
+import getBackendApi from "@/libs/getBackendApi";
 
 interface ReviewListProps {
   reviews: ReviewItem[];
@@ -24,7 +25,7 @@ export default function ReviewList({ reviews: initialReviews, companyId }: Revie
 
   const handleDeleteConfirm = async () => {
     if (!deleteTargetId || !session?.user?.token) return;
-    const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = getBackendApi();
     try {
       const res = await fetch(`${backendUrl}/api/v1/reviews/${deleteTargetId}`, {
         method: "DELETE",
@@ -41,7 +42,7 @@ export default function ReviewList({ reviews: initialReviews, companyId }: Revie
 
   const handleEditSubmit = async (reviewId: string) => {
     if (!session?.user?.token) return;
-    const backendUrl = typeof window === 'undefined' ? process.env.BACKEND_URL : process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = getBackendApi();
     try {
       const res = await fetch(`${backendUrl}/api/v1/reviews/${reviewId}`, {
         method: "PUT",
