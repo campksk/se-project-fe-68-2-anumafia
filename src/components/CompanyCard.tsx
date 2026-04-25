@@ -9,7 +9,7 @@ export default function CompanyCard({ company, hideBookText, isAdmin, isOwned }:
       
       {isAdmin && (
         <div className={`absolute top-0 right-0 px-3 py-1 text-xs font-bold rounded-bl-xl shadow-sm ${isPublic ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-200 text-gray-500'}`}>
-          {isPublic ? 'Public' : 'Private'}
+          {isPublic ? 'Published' : 'Unpublished'}
         </div>
       )}
 
