@@ -3,19 +3,31 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: { 
     const boundary = 1; // Number of pages to show at the beginning and end of the pagination
     const leftDot = currentPage - siblings - boundary > 1;
     const rightDot = currentPage + siblings + boundary < totalPages;
+    const showAll = totalPages <= 2 * siblings + 2 * boundary + 1;
 
-    const numbers = [1];
-    if(leftDot) {
-        numbers.push(-1); // -1 will represent the "..." in the UI
-    }
-    for(let i = Math.max(2, currentPage - siblings); i <= Math.min(totalPages - 1, currentPage + siblings); i++) {
-        numbers.push(i);
-    }
-    if(rightDot) {
-        numbers.push(-2); // -2 will represent the "..." in the UI
-    }
-    if (totalPages > 1) {
-        numbers.push(totalPages);
+    
+
+    const numbers = [];
+    if (showAll) {
+        for(let i = 1; i <= totalPages; i++) {
+            numbers.push(i);
+        }
+    } else {
+        if (totalPages > 0) {
+            numbers.push(1);
+        }
+        if(leftDot) {
+            numbers.push(-1); // -1 will represent the "..." in the UI
+        }
+        for(let i = Math.max(2, currentPage - siblings); i <= Math.min(totalPages - 1, currentPage + siblings); i++) {
+            numbers.push(i);
+        }
+        if(rightDot) {
+            numbers.push(-2); // -2 will represent the "..." in the UI
+        }
+        if (totalPages > 1) {
+            numbers.push(totalPages);
+        }
     }
 
     return (
