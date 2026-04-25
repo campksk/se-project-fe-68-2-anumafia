@@ -11,6 +11,7 @@ import deleteCompany from "@/libs/deleteCompany";
 import { signOut } from "next-auth/react";
 import togglePublic from "@/libs/togglePublic";
 import { Switch } from "@mui/material";
+import setAttendanceStatus from "@/libs/setAttendanceStatus";
 export default function CompanyDashboard() {
   const { data: session } = useSession();
 
@@ -23,7 +24,22 @@ export default function CompanyDashboard() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [attendanceLoadingId, setAttendanceLoadingId] = useState<string | null>(null);
 
+  const handleAttendance = async (id: string, status: 'attended' | 'absent') => {
+    if (!session?.user?.token) return;
+    try {
+      setAttendanceLoadingId(id);
+      await setAttendanceStatus(session.user.token, id, status);
+      setInterviews(interviews.map(i =>
+        i._id === id ? { ...i, attendanceStatus: status } : i
+      ));
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setAttendanceLoadingId(null);
+    }
+  };
   useEffect(() => {
     const fetchDashboardData = async () => {
       if (!session?.user?._id || !session?.user?.token) return;
@@ -291,6 +307,33 @@ export default function CompanyDashboard() {
                       }`}>
                       {interview.attendanceStatus || "pending"}
                     </span>
+                    {/* ✅ Attendance buttons */}
+                    { interview.attendanceStatus === 'pending' &&
+                    <div className="flex gap-2 shrink-0">
+                      <button
+                        onClick={() => handleAttendance(interview._id, 'attended')}
+                        disabled={attendanceLoadingId === interview._id || interview.attendanceStatus === 'attended'}
+                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm
+                ${interview.attendanceStatus === 'attended'
+                            ? 'bg-green-600 text-white cursor-default'
+                            : 'bg-white border-2 border-green-500 text-green-600 hover:bg-green-50 active:scale-95'
+                          } disabled:opacity-50`}
+                      >
+                        ✓ Attended
+                      </button>
+                      <button
+                        onClick={() => handleAttendance(interview._id, 'absent')}
+                        disabled={attendanceLoadingId === interview._id || interview.attendanceStatus === 'absent'}
+                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm
+              ${interview.attendanceStatus === 'absent'
+                            ? 'bg-red-500 text-white cursor-default'
+                            : 'bg-white border-2 border-red-400 text-red-500 hover:bg-red-50 active:scale-95'
+                          } disabled:opacity-50`}
+                      >
+                        ✕ Absent
+                      </button>
+                    </div>
+                  }
                   </div>
                 </div>
               ))
