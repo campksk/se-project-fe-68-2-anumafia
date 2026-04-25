@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { CompanyItem } from '@/interface';
 
-export default function CompanyCard({ company, hideBookText, isAdmin }: { company: CompanyItem, hideBookText?: boolean, isAdmin?: boolean }) {
+export default function CompanyCard({ company, hideBookText, isAdmin, isOwned }: { company: CompanyItem, hideBookText?: boolean, isAdmin?: boolean, isOwned?: boolean }) {
   const isPublic = company.public === true;
 
   return (
@@ -13,7 +13,13 @@ export default function CompanyCard({ company, hideBookText, isAdmin }: { compan
         </div>
       )}
 
-      <h3 className={`text-2xl font-bold text-gray-800 mb-2 ${isAdmin ? 'mt-3' : ''}`}>{company.name}</h3>
+      {isOwned && (
+        <div className="absolute top-0 right-0 px-3 py-1 text-xs font-bold rounded-bl-xl shadow-sm bg-blue-100 text-blue-700">
+          🏢 Your Company
+        </div>
+      )}
+
+      <h3 className={`text-2xl font-bold text-gray-800 mb-2 ${(isAdmin || isOwned) ? 'mt-3' : ''}`}>{company.name}</h3>
       <p className="text-sm text-gray-500 mb-4 flex-grow line-clamp-3">
         {company.description}
       </p>
@@ -21,12 +27,21 @@ export default function CompanyCard({ company, hideBookText, isAdmin }: { compan
       <div className="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center">
         <span className="text-sm text-gray-400">📞 {company.tel}</span>
         
-        <Link 
-          href={`/companies/${company._id || company.id}`} 
-          className="bg-cyan-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-cyan-700 transition-colors shadow-sm"
-        >
-          {hideBookText ? "View" : "View & Book"}
-        </Link>
+        {isOwned ? (
+          <Link 
+            href="/" 
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+          >
+            Edit
+          </Link>
+        ) : (
+          <Link 
+            href={`/companies/${company._id || company.id}`} 
+            className="bg-cyan-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-cyan-700 transition-colors shadow-sm"
+          >
+            {hideBookText ? "View" : "View & Book"}
+          </Link>
+        )}
       </div>
     </div>
   );
