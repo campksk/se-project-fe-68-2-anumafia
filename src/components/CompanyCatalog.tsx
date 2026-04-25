@@ -20,10 +20,16 @@ export default async function CompanyCatalog({ companiesPromise }: { companiesPr
   }
 
   let visibleCompanies = isAdmin 
-    ? companiesJson.data 
+    ? [...companiesJson.data] 
     : companiesJson.data.filter((company: any) => company.public === true);
 
-  if (isCompany && myUserId) {
+  if (isAdmin) {
+    visibleCompanies.sort((a: any, b: any) => {
+      if (a.public && !b.public) return -1;
+      if (!a.public && b.public) return 1;
+      return 0;
+    });
+  } else if (isCompany && myUserId) {
     visibleCompanies.sort((a: any, b: any) => {
       if (a.user === myUserId) return -1; 
       if (b.user === myUserId) return 1;  
