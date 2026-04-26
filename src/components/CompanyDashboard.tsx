@@ -12,6 +12,7 @@ import { signOut } from "next-auth/react";
 import togglePublic from "@/libs/togglePublic";
 import { Switch } from "@mui/material";
 import setAttendanceStatus from "@/libs/setAttendanceStatus";
+
 export default function CompanyDashboard() {
   const { data: session } = useSession();
 
@@ -40,6 +41,7 @@ export default function CompanyDashboard() {
       setAttendanceLoadingId(null);
     }
   };
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       if (!session?.user?._id || !session?.user?.token) return;
@@ -91,22 +93,6 @@ export default function CompanyDashboard() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center py-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600"></div>
-      </div>
-    );
-  }
-
-  if (!company) {
-    return (
-      <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Company Profile Not Found</h2>
-        <p className="text-gray-500">Please contact the administrator to setup your company profile.</p>
-      </div>
-    );
-  }
   const handleDeleteCompany = async () => {
     if (!session?.user?.token || !company) return;
     try {
@@ -125,6 +111,50 @@ export default function CompanyDashboard() {
     setShowDeleteModal(false);
     setConfirmed(false);
   };
+
+  const sortedInterviews = [...interviews].sort((a: any, b: any) => {
+    const statusA = a.attendanceStatus || "pending";
+    const statusB = b.attendanceStatus || "pending";
+    
+    const isPendingA = statusA === "pending";
+    const isPendingB = statusB === "pending";
+
+    if (isPendingA && !isPendingB) return -1;
+    if (!isPendingA && isPendingB) return 1;
+
+    const dateA = new Date(a.apptDate || a.createdAt).getTime();
+    const dateB = new Date(b.apptDate || b.createdAt).getTime();
+
+    if (isPendingA && isPendingB) {
+      return dateA - dateB;
+    }
+    return dateB - dateA;
+  });
+
+  const sortedReviews = [...reviews].sort((a: any, b: any) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
+  const averageRating = reviews.length > 0
+    ? (reviews.reduce((sum: number, r: any) => sum + (r.rating || 5), 0) / reviews.length).toFixed(1)
+    : "0.0";
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600"></div>
+      </div>
+    );
+  }
+
+  if (!company) {
+    return (
+      <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Company Profile Not Found</h2>
+        <p className="text-gray-500">Please contact the administrator to setup your company profile.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-8 animate-fade-in-up">
@@ -227,7 +257,6 @@ export default function CompanyDashboard() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                 <span className="hidden sm:inline">Edit Info</span>
               </Link>
-
             </div>
           </div>
 
@@ -289,8 +318,8 @@ export default function CompanyDashboard() {
 
         {activeTab === "interviews" && (
           <div className="space-y-4 animate-fade-in">
-            {interviews.length > 0 ? (
-              interviews.map((interview: any, idx) => (
+            {sortedInterviews.length > 0 ? (
+              sortedInterviews.map((interview: any, idx) => (
                 <div key={interview._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
                   <div>
                     <h4 className="font-bold text-gray-900 text-lg flex items-center gap-2">
@@ -307,28 +336,19 @@ export default function CompanyDashboard() {
                       }`}>
                       {interview.attendanceStatus || "pending"}
                     </span>
-                    {/* ✅ Attendance buttons */}
-                    { interview.attendanceStatus === 'pending' &&
+                    {(!interview.attendanceStatus || interview.attendanceStatus === 'pending') &&
                     <div className="flex gap-2 shrink-0">
                       <button
                         onClick={() => handleAttendance(interview._id, 'attended')}
-                        disabled={attendanceLoadingId === interview._id || interview.attendanceStatus === 'attended'}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm
-                ${interview.attendanceStatus === 'attended'
-                            ? 'bg-green-600 text-white cursor-default'
-                            : 'bg-white border-2 border-green-500 text-green-600 hover:bg-green-50 active:scale-95'
-                          } disabled:opacity-50`}
+                        disabled={attendanceLoadingId === interview._id}
+                        className="px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm bg-white border-2 border-green-500 text-green-600 hover:bg-green-50 active:scale-95 disabled:opacity-50"
                       >
                         ✓ Attended
                       </button>
                       <button
                         onClick={() => handleAttendance(interview._id, 'absent')}
-                        disabled={attendanceLoadingId === interview._id || interview.attendanceStatus === 'absent'}
-                        className={`px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm
-              ${interview.attendanceStatus === 'absent'
-                            ? 'bg-red-500 text-white cursor-default'
-                            : 'bg-white border-2 border-red-400 text-red-500 hover:bg-red-50 active:scale-95'
-                          } disabled:opacity-50`}
+                        disabled={attendanceLoadingId === interview._id}
+                        className="px-4 py-2 rounded-xl text-sm font-bold transition-all shadow-sm bg-white border-2 border-red-400 text-red-500 hover:bg-red-50 active:scale-95 disabled:opacity-50"
                       >
                         ✕ Absent
                       </button>
@@ -347,29 +367,54 @@ export default function CompanyDashboard() {
         )}
 
         {activeTab === "reviews" && (
-          <div className="space-y-4 animate-fade-in">
-            {reviews.length > 0 ? (
-              reviews.map((review: any, idx) => (
-                <div key={review._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-amber-100 text-amber-700 font-bold px-2.5 py-1 rounded-md text-sm flex items-center gap-1 shadow-sm">
-                      ★ {review.rating || 5}
-                    </span>
-                    <span className="text-gray-400 text-xs font-medium">
-                      {new Date(review.createdAt).toLocaleDateString()}
+          <div className="space-y-6 animate-fade-in">
+            
+            {sortedReviews.length > 0 && (
+              <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-3xl border border-amber-100 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 shadow-sm">
+                <div className="text-center">
+                  <div className="text-5xl font-extrabold text-amber-500 mb-1">{averageRating}</div>
+                  <div className="text-amber-700/70 text-sm font-semibold tracking-wide uppercase">Out of 5</div>
+                </div>
+                <div className="hidden sm:block w-px h-16 bg-amber-200/50"></div>
+                <div className="flex flex-col items-center sm:items-start">
+                  <div className="flex text-amber-400 text-2xl mb-1">
+                    {"★".repeat(Math.round(Number(averageRating)))}
+                    <span className="text-amber-200">
+                      {"★".repeat(5 - Math.round(Number(averageRating)))}
                     </span>
                   </div>
-                  <p className="text-gray-700 leading-relaxed text-sm">
-                    "{review.reviewText || "No comment."}"
+                  <p className="text-amber-700/80 font-medium text-sm">
+                    Based on {sortedReviews.length} review{sortedReviews.length > 1 ? 's' : ''}
                   </p>
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-gray-500 flex flex-col items-center justify-center">
-                <div className="text-4xl mb-3 opacity-50">⭐</div>
-                No reviews available for your company.
               </div>
             )}
+
+            <div className="space-y-4">
+              {sortedReviews.length > 0 ? (
+                sortedReviews.map((review: any, idx) => (
+                  <div key={review._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="bg-amber-100 text-amber-700 font-bold px-2.5 py-1 rounded-md text-sm flex items-center gap-1 shadow-sm">
+                        ★ {review.rating || 5}
+                      </span>
+                      <span className="text-gray-400 text-xs font-medium">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed text-sm">
+                      "{review.reviewText || "No comment."}"
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 text-gray-500 flex flex-col items-center justify-center">
+                  <div className="text-4xl mb-3 opacity-50">⭐</div>
+                  No reviews available for your company.
+                </div>
+              )}
+            </div>
+            
           </div>
         )}
       </div>
