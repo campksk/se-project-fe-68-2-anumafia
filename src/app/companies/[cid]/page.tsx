@@ -23,7 +23,7 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   const hideInterviewForm = role === "admin" || role === "company";
   const hideReviewForm = role === "admin" || role === "company" || !hasAttended;
   
-  const companyDetail = await getCompany(cid);
+  const companyDetail = await getCompany(cid,session?.user?.token as string);
   const company = companyDetail.data;
 
   const reviewsData = await getReviews(cid) as ReviewJson;
