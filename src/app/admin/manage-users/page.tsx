@@ -2,21 +2,23 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { UserItem } from '@/interface'; 
+import { UserJson } from '@/interface'; 
 import getUsers from '@/libs/getUsers'; 
 import UserControls from '@/components/UserControls';
+import Pagination from '@/components/Pagination';
 
 export default function ManageUserPage() {
   const { data: session } = useSession();
   
-  const [users, setUsers] = useState<UserItem[]>([]);
+  const [userJson, setUserJson] = useState<UserJson | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [searchInput, setSearchInput] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [filterRole, setFilterRole] = useState("all"); 
-  const [sortOption, setSortOption] = useState("name_asc"); 
+  const [sortOption, setSortOption] = useState("name_asc");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,19 +37,20 @@ export default function ManageUserPage() {
       if (sortOption === 'name_asc') queryParams.append('sort', 'name');
       if (sortOption === 'name_desc') queryParams.append('sort', '-name');
       if (sortOption === 'recent') queryParams.append('sort', '-createdAt');
-
+      queryParams.append('page', currentPage.toString());
+      if (debouncedSearch) queryParams.append('name', debouncedSearch);
       const queryString = `?${queryParams.toString()}`;
 
       const res = await getUsers(session.user.token, queryString);
-      if (res.data) {
-        setUsers(res.data);
+      if (res) {
+        setUserJson(res);
       }
     } catch (error) {
       console.error("Error fetching users:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [session?.user?.token, filterRole, sortOption]); 
+  }, [session?.user?.token, filterRole, sortOption, debouncedSearch, currentPage]); 
 
   useEffect(() => {
     if (session !== null) {
@@ -59,18 +62,8 @@ export default function ManageUserPage() {
     setExpandedId(expandedId === id ? null : id);
   };
 
-  const displayedUsers = users.filter((user) => {
-    if (!debouncedSearch) return true;
-    const searchLower = debouncedSearch.toLowerCase();
-    
-    const nameMatch = user.name?.toLowerCase().includes(searchLower) || false;
-    const emailMatch = user.email?.toLowerCase().includes(searchLower) || false;
-    
-    return nameMatch || emailMatch;
-  });
-
   return (
-    <main className="min-h-screen bg-gray-50 p-4 sm:p-8 pt-24">
+    <main className="min-h-screen bg-gray-50 p-4 sm:p-8 mt-16">
       <div className="max-w-5xl mx-auto">
         
         <div className="flex flex-col mb-8 gap-5 animate-fade-in-down">
@@ -80,7 +73,7 @@ export default function ManageUserPage() {
               User Management
             </h1>
             <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full shadow-sm">
-              Total: {displayedUsers.length}
+              Total: {userJson?.totalItems ?? 0}
             </span>
           </div>
 
@@ -110,6 +103,7 @@ export default function ManageUserPage() {
                 <option value="all">All Roles</option>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
+                <option value="company">Company</option>
               </select>
             </div>
 
@@ -135,8 +129,8 @@ export default function ManageUserPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {displayedUsers.length > 0 ? (
-              displayedUsers.map((user) => {
+            {userJson?.totalItems && userJson.totalItems > 0 ? (
+              userJson.data.map((user) => {
                 const yellowCount = user.yellowCards?.count || 0;
                 const isEffectivelyBanned = user.ban?.isBanned || yellowCount >= 3;
 
@@ -253,6 +247,7 @@ export default function ManageUserPage() {
                 <p className="text-gray-400 text-sm mt-1">Try adjusting your filters or search query.</p>
               </div>
             )}
+            <Pagination currentPage={currentPage} totalPages={userJson?.totalPages as number} onPageChange={setCurrentPage} />
           </div>
         )}
       </div>

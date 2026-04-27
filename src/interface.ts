@@ -19,6 +19,15 @@ export interface UserItem {
 	};
 }
 
+export interface UserJson {
+  success: boolean;
+  totalItems: number;
+  totalPages: number;
+  itemCount: number;
+  currentPage: number;
+  data: UserItem[];
+}
+
 export interface CompanyItem {
   _id: string;
   user: string
@@ -79,5 +88,3 @@ export interface ReviewJson {
   count: number;
   data: ReviewItem[];
 }
-
-
