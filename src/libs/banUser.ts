@@ -1,9 +1,11 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function banUser(
   userId: string,
   token: string,
   reason: string
 ) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = getBackendApi();
 
   const res = await fetch(`${backendUrl}/api/v1/users/ban/${userId}`, {
     method: "PUT",
