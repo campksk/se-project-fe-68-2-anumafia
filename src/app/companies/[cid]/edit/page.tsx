@@ -1,10 +1,20 @@
+import UnauthorizedPage from "@/app/(Authen)/unauthorized/page";
+import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import CompanyForm from "@/components/CompanyForm";
 import getCompany from "@/libs/getCompany";
+import { getServerSession } from "next-auth/next";
 import Link from "next/link";
 
 export default async function EditCompanyPage({ params }: { params: Promise<{ cid: string }> }) {
   const { cid } = await params;
-  const companyDetail = await getCompany(cid);
+  const session = await getServerSession(authOptions);
+  let companyDetail;
+  try {
+    companyDetail = await getCompany(cid, session?.user?.token as string);
+  } catch (error) {
+    console.error("Error fetching company details:", error);
+    return <UnauthorizedPage />;
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 pt-20 pb-6 px-4 md:px-12 flex flex-col justify-center">

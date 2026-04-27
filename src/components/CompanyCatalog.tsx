@@ -2,9 +2,16 @@ import CompanyCard from './CompanyCard';
 import { CompanyJson } from '@/interface';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import UnauthorizedPage from '@/app/(Authen)/unauthorized/page';
 
 export default async function CompanyCatalog({ companiesPromise }: { companiesPromise: Promise<CompanyJson> }) {
-  const companiesJson = await companiesPromise;
+  let companiesJson;
+  try {
+    companiesJson = await companiesPromise;
+  }catch (error) {
+    console.error("Error fetching companies:", error);
+    return <UnauthorizedPage />;
+  }
   
   const session = await getServerSession(authOptions);
   
