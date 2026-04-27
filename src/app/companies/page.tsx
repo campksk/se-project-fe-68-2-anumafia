@@ -1,10 +1,13 @@
 import CompanyCatalog from '@/components/CompanyCatalog';
 import getCompanies from '@/libs/getCompanies';
+import { getServerSession } from 'next-auth/next';
 import { Suspense } from 'react';
+import { authOptions } from '../api/auth/[...nextauth]/authOptions';
 
 export default async function CompaniesPage() {
   
-  const companiesPromise = getCompanies();
+  const session = await getServerSession(authOptions);
+  const companiesPromise = getCompanies(session?.user?.token as string);
 
   return (
     <main className="min-h-screen bg-gray-50 pt-24 pb-16 px-4 md:px-12">
