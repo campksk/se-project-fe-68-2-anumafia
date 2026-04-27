@@ -9,6 +9,7 @@ import { ReviewJson } from "@/interface";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import getInterviews from "@/libs/getInterviews";
+import UnauthorizedPage from "@/app/(Authen)/unauthorized/page";
 export default async function CompanyDetailPage({ params }: { params: Promise<{ cid: string }> }) {
   const { cid } = await params;
   
@@ -23,7 +24,13 @@ export default async function CompanyDetailPage({ params }: { params: Promise<{ 
   const hideInterviewForm = role === "admin" || role === "company";
   const hideReviewForm = role === "admin" || role === "company" || !hasAttended;
   
-  const companyDetail = await getCompany(cid,session?.user?.token as string);
+  let companyDetail;
+  try {
+    companyDetail = await getCompany(cid,session?.user?.token as string);
+  } catch (error) {
+    console.error("Error fetching company details:", error);
+    return <UnauthorizedPage />;
+  }
   const company = companyDetail.data;
 
   const reviewsData = await getReviews(cid) as ReviewJson;

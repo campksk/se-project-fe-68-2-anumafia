@@ -48,7 +48,7 @@ export default function CompanyDashboard() {
 
       try {
         setLoading(true);
-        const companyRes = await getCompanyByUserId(session.user._id);
+        const companyRes = await getCompanyByUserId(session.user._id, session.user.token);
         const myCompany = companyRes.data[0] || companyRes.data;
         setCompany(myCompany);
 
