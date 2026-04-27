@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import getBackendApi from "@/libs/getBackendApi";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const backendUrl = getBackendApi();
       const res = await fetch(`${backendUrl}/api/v1/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

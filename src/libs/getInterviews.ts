@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function getInterviews(token: string, companyId?: string) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = getBackendApi();
   
   const url = companyId ? `${backendUrl}/api/v1/companies/${companyId}/interviews` : `${backendUrl}/api/v1/interviews`;
   const response = await fetch(url, {

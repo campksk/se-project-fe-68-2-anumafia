@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function createCompanyAccount(token: string, data: any) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/companies`, {
+  const response = await fetch(`${getBackendApi()}/api/v1/companies`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

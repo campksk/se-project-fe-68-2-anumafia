@@ -1,6 +1,7 @@
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import userLogIn from "@/libs/userLogIn";
+import getBackendApi from "@/libs/getBackendApi";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -16,7 +17,7 @@ export const authOptions: AuthOptions = {
         const user = await userLogIn(credentials.email, credentials.password);
         
         if (user && user.token) {
-          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+          const backendUrl = getBackendApi();
           const profileRes = await fetch(`${backendUrl}/api/v1/auth/me`, {
             method: "GET",
             headers: { authorization: `Bearer ${user.token}` }

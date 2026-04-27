@@ -1,5 +1,7 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function createReview(companyId: string, rating: number, reviewText: string, token: string) {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const backendUrl = getBackendApi();
 
     console.log("Debug - Backend URL:", backendUrl);
 

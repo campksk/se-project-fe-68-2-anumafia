@@ -4,6 +4,7 @@ import { useState } from "react";
 import { InterviewItem, CompanyItem } from "@/interface";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import getBackendApi from "@/libs/getBackendApi";
 
 export default function BookingList({ initialBookings, token, role }: { initialBookings: InterviewItem[], token: string, role?: string }) {
   const [bookings, setBookings] = useState<InterviewItem[]>(initialBookings);
@@ -12,7 +13,7 @@ export default function BookingList({ initialBookings, token, role }: { initialB
   const router = useRouter();
 
   const isAdmin = role === "admin";
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = getBackendApi();
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to cancel this interview?")) return;

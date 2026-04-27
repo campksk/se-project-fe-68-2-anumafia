@@ -1,7 +1,9 @@
+import getBackendApi from "./getBackendApi";
+
 export default async function handleAttendance(token: string, id: string, status: 'attended' | 'absent'){
     if (!token) return;
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const backendUrl = getBackendApi();
       await fetch(`${backendUrl}/api/v1/interviews/${id}/attendance`, {
         method: "PUT",
         headers: {
