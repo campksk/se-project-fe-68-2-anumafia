@@ -6,7 +6,7 @@ import Link from "next/link";
 import getCompanyByUserId from "@/libs/getCompanyByUserId";
 import getInterviews from "@/libs/getInterviews";
 import getReviews from "@/libs/getReviews";
-import { CompanyItem } from "@/interface";
+import { CompanyItem, InterviewItem } from "@/interface";
 import deleteCompany from "@/libs/deleteCompany";
 import { signOut } from "next-auth/react";
 import togglePublic from "@/libs/togglePublic";
@@ -319,14 +319,14 @@ export default function CompanyDashboard() {
         {activeTab === "interviews" && (
           <div className="space-y-4 animate-fade-in">
             {sortedInterviews.length > 0 ? (
-              sortedInterviews.map((interview: any, idx) => (
+              sortedInterviews.map((interview: InterviewItem, idx) => (
                 <div key={interview._id || idx} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-shadow">
                   <div>
                     <h4 className="font-bold text-gray-900 text-lg flex items-center gap-2">
                       👤 {interview.user?.name || "Candidate Name"}
                     </h4>
                     <p className="text-gray-500 text-sm mt-1 flex items-center gap-2">
-                      📅 Date: <span className="font-semibold text-cyan-700">{new Date(interview.apptDate || interview.createdAt).toLocaleDateString()}</span>
+                      📅 Date: <span className="font-semibold text-cyan-700">{new Date(interview.sessionDate).toLocaleDateString()}</span>
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
