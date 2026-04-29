@@ -26,9 +26,7 @@ export default async function CompanyCatalog({ companiesPromise }: { companiesPr
     return <div className="text-center text-gray-500 text-xl mt-10">No companies available at the moment.</div>;
   }
 
-  let visibleCompanies = isAdmin 
-    ? [...companiesJson.data] 
-    : companiesJson.data.filter((company: any) => company.public === true);
+  let visibleCompanies = [...companiesJson.data];
 
   if (isAdmin) {
     visibleCompanies.sort((a: any, b: any) => {
